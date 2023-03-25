@@ -103,8 +103,10 @@ impl Default for Colors {
 
 #[derive(Debug, PartialEq, Clone, Deserialize)]
 pub struct Advanced {
-    #[serde(default = "default_tab_character", rename = "tab-character")]
-    pub tab_character: char,
+    #[serde(default = "default_tab_character_active", rename = "tab-character-active")]
+    pub tab_character_active: char,
+    #[serde(default = "default_tab_character_inactive", rename = "tab-character-inactive")]
+    pub tab_character_inactive: char,
     #[serde(default = "bool::default")]
     pub monochrome: bool,
     #[serde(default = "bool::default", rename = "enable-fps-counter")]
@@ -114,7 +116,8 @@ pub struct Advanced {
 impl Default for Advanced {
     fn default() -> Advanced {
         Advanced {
-            tab_character: default_tab_character(),
+            tab_character_active: default_tab_character_active(),
+            tab_character_inactive: default_tab_character_inactive(),
             monochrome: false,
             enable_fps_counter: false,
         }
@@ -273,7 +276,8 @@ mod tests {
         assert_eq!(result.colors.cursor, default_color_cursor());
 
         // Advanced
-        assert_eq!(result.advanced.tab_character, default_tab_character());
+        assert_eq!(result.advanced.tab_character_active, default_tab_character_active());
+        assert_eq!(result.advanced.tab_character_inactive, default_tab_character_inactive());
         assert!(!result.advanced.monochrome);
         assert!(!result.advanced.enable_fps_counter);
     }
@@ -300,7 +304,8 @@ mod tests {
             theme = "Basic"
 
             [advanced]
-            tab-character = '■'
+            tab-character-active = '●'
+            tab-character-inactive = '■'
             monochrome = false
             enable-fps-counter = false
         "#,
@@ -321,7 +326,8 @@ mod tests {
         assert_eq!(result.colors.tabs_active, default_color_tabs_active());
         assert_eq!(result.colors.cursor, default_color_cursor());
         // Advanced
-        assert_eq!(result.advanced.tab_character, default_tab_character());
+        assert_eq!(result.advanced.tab_character_active, default_tab_character_active());
+        assert_eq!(result.advanced.tab_character_inactive, default_tab_character_inactive());
         assert!(!result.advanced.monochrome);
         assert!(!result.advanced.enable_fps_counter);
     }
@@ -530,7 +536,8 @@ mod tests {
             [advanced]
             monochrome = true
             enable-fps-counter = true
-            tab-character = '▲'            
+            tab-character-active = '▲'
+            tab-character-inactive = '●'
         "#,
         );
 
@@ -541,7 +548,8 @@ mod tests {
         assert_eq!(result.columns, default_columns());
         // Advanced
         assert!(result.advanced.monochrome);
-        assert_eq!(result.advanced.tab_character, '▲');
+        assert_eq!(result.advanced.tab_character_active, '▲');
+        assert_eq!(result.advanced.tab_character_inactive, '●');
         assert!(result.advanced.enable_fps_counter);
 
         // Colors
